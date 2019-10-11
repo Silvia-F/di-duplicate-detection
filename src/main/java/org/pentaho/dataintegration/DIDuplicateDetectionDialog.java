@@ -53,6 +53,7 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 	private Text wThreshold;
 	private Text wGroupColumnName;
 	private Text wSimColumnName;
+	private Button wRemoveDuplicates;
 	private Button wRemoveSingletons;
 	private Button wCancel;
 	private Button wOK;
@@ -181,6 +182,28 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 				.result();
 		wSimColumnName.setLayoutData( fdSimColumnName );
 		
+		
+		Label wlRemoveDuplicates = new Label( shell, SWT.RIGHT );
+		wlRemoveDuplicates.setText( BaseMessages.getString( PKG, "DIDuplicateDetectionDialog.RemoveDuplicates.Label" ) );
+		props.setLook( wlRemoveDuplicates );
+
+		FormData fdlRemoveDuplicates = new FormDataBuilder()
+				.left( 0, 0 )
+				.right( props.getMiddlePct(), -Const.MARGIN )
+				.top( wSimColumnName, 4 * Const.MARGIN )
+				.result();
+		wlRemoveDuplicates.setLayoutData( fdlRemoveDuplicates );
+		
+		wRemoveDuplicates = new Button(shell, SWT.CHECK);
+		props.setLook(wRemoveDuplicates);
+		
+		FormData fdRemoveDuplicates = new FormDataBuilder()
+				.left( props.getMiddlePct(), 0 )
+				.right( 100, -Const.MARGIN )
+				.top( wSimColumnName, 4 * Const.MARGIN )
+				.result();
+		wRemoveDuplicates.setLayoutData( fdRemoveDuplicates );
+		
 		Label wlRemoveSingletons = new Label( shell, SWT.RIGHT );
 		wlRemoveSingletons.setText( BaseMessages.getString( PKG, "DIDuplicateDetectionDialog.RemoveSingletons.Label" ) );
 		props.setLook( wlRemoveSingletons );
@@ -188,7 +211,7 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 		FormData fdlRemoveSingletons = new FormDataBuilder()
 				.left( 0, 0 )
 				.right( props.getMiddlePct(), -Const.MARGIN )
-				.top( wSimColumnName, 4 * Const.MARGIN )
+				.top( wRemoveDuplicates, 4 * Const.MARGIN )
 				.result();
 		wlRemoveSingletons.setLayoutData( fdlRemoveSingletons );
 
@@ -198,7 +221,7 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 		FormData fdRemoveSingletons = new FormDataBuilder()
 				.left( props.getMiddlePct(), 0 )
 				.right( 100, -Const.MARGIN )
-				.top( wSimColumnName, 4 * Const.MARGIN )
+				.top( wRemoveDuplicates, 4 * Const.MARGIN )
 				.result();
 		wRemoveSingletons.setLayoutData( fdRemoveSingletons );
 
