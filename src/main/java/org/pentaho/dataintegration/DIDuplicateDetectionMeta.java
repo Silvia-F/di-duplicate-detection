@@ -60,6 +60,7 @@ public class DIDuplicateDetectionMeta extends BaseStepMeta implements StepMetaIn
 	private String groupColumnName; // The name for the output column of approximate duplicate groups
 	private String simColumnName; // The name for the output column corresponding to the similarity values
 	private double matchThreshold; // The matching threshold value
+	private boolean removeDuplicates; // If true, keep only group representantives in the output
 	private boolean removeSingletons; // If true, remove singleton groups from the output
 
 	public DIDuplicateDetectionMeta() {
@@ -84,6 +85,11 @@ public class DIDuplicateDetectionMeta extends BaseStepMeta implements StepMetaIn
 			matchThreshold = 0.5;
 		}
 		try {
+			removeDuplicates = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "removeDuplicates"));
+		} catch (Exception e) {
+			removeDuplicates = false;
+		}
+		try {
 			removeSingletons = Boolean.parseBoolean(XMLHandler.getTagValue(stepnode, "removeSingletons"));
 		} catch (Exception e) {
 			removeSingletons = false;
@@ -95,6 +101,7 @@ public class DIDuplicateDetectionMeta extends BaseStepMeta implements StepMetaIn
 		retval.append(XMLHandler.addTagValue("groupColumnName", groupColumnName)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("simColumnName", simColumnName)).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("matchThreshold", matchThreshold)).append(Const.CR);
+		retval.append(XMLHandler.addTagValue("removeDuplicates", String.valueOf(removeDuplicates))).append(Const.CR);
 		retval.append(XMLHandler.addTagValue("removeSingletons", String.valueOf(removeSingletons))).append(Const.CR);
 		return retval.toString();
 	}   
@@ -103,6 +110,7 @@ public class DIDuplicateDetectionMeta extends BaseStepMeta implements StepMetaIn
 		groupColumnName = "Group";
 		simColumnName = "Similarity";
 		matchThreshold = 0.5;
+		removeDuplicates = false;
 		removeSingletons = false;
 	}
 
@@ -188,6 +196,14 @@ public class DIDuplicateDetectionMeta extends BaseStepMeta implements StepMetaIn
 	
 	public double getMatchThreshold() {
 		return matchThreshold;
+	}
+	
+	public void setRemoveDuplicates(boolean removeDuplicates) {
+		this.removeDuplicates = removeDuplicates;
+	}
+	
+	public boolean getRemoveDuplicates() {
+		return removeDuplicates;
 	}
 	
 	public void setRemoveSingletons(boolean removeSingletons) {

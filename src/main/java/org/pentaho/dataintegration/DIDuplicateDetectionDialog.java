@@ -134,7 +134,7 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 		FormData fdThreshold = new FormDataBuilder()
 				.left( props.getMiddlePct(), 0 )
 				.right( 100, -Const.MARGIN )
-				.top( wStepname, 2 * Const.MARGIN )
+				.top( wStepname, 4 * Const.MARGIN )
 				.result();
 		wThreshold.setLayoutData( fdThreshold );  
 
@@ -182,7 +182,19 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 				.result();
 		wSimColumnName.setLayoutData( fdSimColumnName );
 		
+		// Button Selection Listener
+		SelectionListener selectedListener = new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				meta.setChanged();				
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				//Do Nothing
+			}	
+		};
 		
+		//Buttons
 		Label wlRemoveDuplicates = new Label( shell, SWT.RIGHT );
 		wlRemoveDuplicates.setText( BaseMessages.getString( PKG, "DIDuplicateDetectionDialog.RemoveDuplicates.Label" ) );
 		props.setLook( wlRemoveDuplicates );
@@ -195,6 +207,7 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 		wlRemoveDuplicates.setLayoutData( fdlRemoveDuplicates );
 		
 		wRemoveDuplicates = new Button(shell, SWT.CHECK);
+		wRemoveDuplicates.addSelectionListener( selectedListener );
 		props.setLook(wRemoveDuplicates);
 		
 		FormData fdRemoveDuplicates = new FormDataBuilder()
@@ -216,6 +229,7 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 		wlRemoveSingletons.setLayoutData( fdlRemoveSingletons );
 
 		wRemoveSingletons = new Button(shell, SWT.CHECK);
+		wRemoveSingletons.addSelectionListener( selectedListener );
 		props.setLook(wRemoveSingletons);
 
 		FormData fdRemoveSingletons = new FormDataBuilder()
@@ -243,7 +257,7 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 				.result();
 		wOK.setLayoutData( fdOk );
 
-		//Listeners
+		//Listeners		
 		lsCancel = new Listener() {
 			public void handleEvent( Event e ) {
 				cancel();
@@ -328,6 +342,7 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 		wThreshold.setText(String.valueOf(meta.getMatchThreshold()));
 		wGroupColumnName.setText(meta.getGroupColumnName());
 		wSimColumnName.setText(meta.getSimColumnName());
+		wRemoveDuplicates.setSelection(meta.getRemoveDuplicates());
 		wRemoveSingletons.setSelection(meta.getRemoveSingletons());
 		
 	}
@@ -336,6 +351,7 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 		meta.setMatchThrehsold(Double.parseDouble(wThreshold.getText()));
 		meta.setGroupColumnName(wGroupColumnName.getText());
 		meta.setSimColumnName(wSimColumnName.getText());
+		meta.setRemoveDuplicates(wRemoveDuplicates.getSelection());
 		meta.setRemoveSingletons(wRemoveSingletons.getSelection());
 		stepname = wStepname.getText();
 		dispose();

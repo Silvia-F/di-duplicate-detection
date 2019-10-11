@@ -221,6 +221,10 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 	}
 	private void writeOutput() throws KettleStepException, KettlePluginException {
 		for (int i = 0; i < data.buffer.size(); i++) {
+			// Verify if duplicates should be in the output
+			if (data.getGraph().get(i) != data.getGraph().get(i).findSet() && meta.getRemoveDuplicates())
+				continue;
+			
 			Object[] newRow = new Object[data.buffer.get(i).length + 2];
 			for (int j = 0; j < data.buffer.get(i).length; j++) 
 				newRow[j] = data.buffer.get(i)[j];
@@ -230,6 +234,7 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 			
 			Double outputSimilarity = null;
 			
+			//Verify if singletons should be in the output
 			if (meta.getRemoveSingletons() && data.getGraph().get(i) == data.getGraph().get(i).findSet() &&
 					data.getGraph().get(i).getChildren().size() == 0)
 				continue;
