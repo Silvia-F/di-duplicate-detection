@@ -1,0 +1,42 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1570742419863
+Build-Jdk: 1.8.0_171
+Built-By: sicaf
+Bundle-Description: "Step to compute approximate duplicate groups"
+Bundle-DocURL: http://www.pentaho.com
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: "Domain-Independent Duplicate Detection"
+Bundle-SymbolicName: org.pentaho.dataintegration.di-duplicate-detection
+Bundle-Vendor: Hitachi Vantara
+Bundle-Version: 1.0.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: org.pentaho.dataintegration;uses:="org.eclipse.swt.widge
+ ts,org.pentaho.di.core,org.pentaho.di.core.annotations,org.pentaho.di.c
+ ore.database,org.pentaho.di.core.exception,org.pentaho.di.core.row,org.
+ pentaho.di.core.variables,org.pentaho.di.repository,org.pentaho.di.tran
+ s,org.pentaho.di.trans.step,org.pentaho.di.ui.trans.step,org.pentaho.me
+ tastore.api,org.pentaho.metaverse.api,org.pentaho.metaverse.api.analyze
+ r.kettle.step,org.w3c.dom";version="1.0.0"
+Implementation-ProductID: di-duplicate-detection
+Implementation-Title: "Domain-Independent Duplicate Detection"
+Implementation-Vendor: Hitachi Vantara
+Implementation-Vendor-Id: org.pentaho.dataintegration
+Implementation-Version: 1.0-SNAPSHOT
+Import-Package: org.eclipse.swt.events,org.eclipse.swt.layout,org.eclips
+ e.swt.widgets,org.pentaho.di.core,org.pentaho.di.core.annotations,org.p
+ entaho.di.core.database,org.pentaho.di.core.exception,org.pentaho.di.co
+ re.logging,org.pentaho.di.core.row,org.pentaho.di.core.row.value,org.pe
+ ntaho.di.core.util,org.pentaho.di.core.variables,org.pentaho.di.core.xm
+ l,org.pentaho.di.i18n,org.pentaho.di.repository,org.pentaho.di.trans,or
+ g.pentaho.di.trans.step,org.pentaho.di.ui.core,org.pentaho.di.ui.trans.
+ step,org.pentaho.metastore.api,org.pentaho.metaverse.api,org.pentaho.me
+ taverse.api.analyzer.kettle.step,org.w3c.dom
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.7))"
+SCM_BRANCH: master
+Source-Java-Version: 1.8
+Specification-Title: "Domain-Independent Duplicate Detection"
+Specification-Vendor: Hitachi Vantara
+Specification-Version: 1.0-SNAPSHOT
+Target-Java-Version: 1.7
+Tool: Bnd-2.3.0.201405100607

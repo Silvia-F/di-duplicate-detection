@@ -1,0 +1,12 @@
+org\pentaho\dataintegration\Node.class
+org\pentaho\dataintegration\DIDuplicateDetection.class
+org\pentaho\dataintegration\DIDuplicateDetectionData.class
+org\pentaho\dataintegration\DIDuplicateDetectionDialog$2.class
+org\pentaho\dataintegration\DIDuplicateDetectionDialog.class
+org\pentaho\dataintegration\DIDuplicateDetectionDialog$5.class
+org\pentaho\dataintegration\DIDuplicateDetection$1.class
+org\pentaho\dataintegration\DIDuplicateDetectionDialog$1.class
+org\pentaho\dataintegration\DIDuplicateDetectionMeta.class
+org\pentaho\dataintegration\DIDuplicateDetectionDialog$4.class
+org\pentaho\dataintegration\DIDuplicateDetectionStepAnalyzer.class
+org\pentaho\dataintegration\DIDuplicateDetectionDialog$3.class
