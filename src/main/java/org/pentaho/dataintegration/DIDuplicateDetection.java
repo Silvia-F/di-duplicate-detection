@@ -21,7 +21,6 @@ package org.pentaho.dataintegration;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -117,6 +116,7 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 		orderedGraph.addAll(data.getGraph());
 		orderedGraph.sort(null);
 		queue.addFirst(orderedGraph.get(0));
+		
 		// First pass
 		for (int i = 1; i < orderedGraph.size(); i++) {
 			boolean changed = false;
@@ -134,14 +134,13 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 							nodesAboveThreshold++;
 					}
 					if (nodesAboveThreshold == queueNode.getChildren().size()) {
-						queue.addFirst(node.union(queueNode));
-						queue.remove(j + 1);
+						queue.set(j, node.union(queueNode));
 						changed = true;
-						break;
+					break;
 					}
 				}       
 			}     
-			if (!changed) {       
+			if (!changed) {      
 				queue.addFirst(node.findSet());
 				if (queue.size() > 4) {
 					queue.removeLast();
@@ -203,10 +202,9 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 							break;
 					}
 					
-					if (nodesAboveThreshold == node.findSet().getChildren().size() + queueNode.getChildren().size() + 1) {              
+					if (nodesAboveThreshold == node.findSet().getChildren().size() + queueNode.getChildren().size() + 1) {             
 						queue.addFirst(node.findSet().union(queueNode));
-						queue.remove(j + 1);
-						changed = true;
+						queue.set(j, node.findSet().union(queueNode));
 						break;
 					}
 				}				
