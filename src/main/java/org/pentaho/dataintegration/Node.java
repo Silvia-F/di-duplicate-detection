@@ -89,4 +89,5 @@ public class Node implements Comparable<Node> {
 	public ArrayList<Node> getChildren() {
 		return children;
 	}
+	
 }

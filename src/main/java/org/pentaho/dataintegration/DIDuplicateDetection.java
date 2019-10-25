@@ -45,6 +45,8 @@ import org.pentaho.di.trans.step.StepInterface;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
 
+import com.wcohen.ss.NeedlemanWunsch;
+
 /**
 	* Describe your step plugin.
 	* 
@@ -55,6 +57,7 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 	
 	private DIDuplicateDetectionData data;
 	private DIDuplicateDetectionMeta meta;
+	private NeedlemanWunsch nd = new NeedlemanWunsch();
 	
 	public DIDuplicateDetection( StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
 			Trans trans ) {
@@ -122,21 +125,21 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 			boolean changed = false;
 			Node node = orderedGraph.get(i);
 			for (int j = 0; j < queue.size(); j++) {
-				Node queueNode = queue.get(j);
-				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getData(), queueNode.getData()) /
-						Math.max(node.getData().length(), queueNode.getData().length())) >= matchThreshold) {
+				Node queueNode = queue.get(j);				
+				if (1 - Math.abs(nd.score(node.getData(), queueNode.getData())) /
+						Math.max(node.getData().length(), queueNode.getData().length()) >= matchThreshold) {
 					// Check that all members of the group satisfy the matching threshold to be merged
 					int nodesAboveThreshold = 0;
 					for (int k = 0; k < queueNode.getChildren().size(); k++) {
-						if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getData(), 
-								queueNode.getChildren().get(k).getData()) / Math.max(node.findSet().getData().length(), 
-								queueNode.getChildren().get(k).getData().length())) >= matchThreshold)  
+						if (1 - Math.abs(nd.score(node.findSet().getData(), 
+								queueNode.getChildren().get(k).getData())) / Math.max(node.findSet().getData().length(), 
+								queueNode.getChildren().get(k).getData().length()) >= matchThreshold)  
 							nodesAboveThreshold++;
 					}
 					if (nodesAboveThreshold == queueNode.getChildren().size()) {
 						queue.set(j, node.union(queueNode));
 						changed = true;
-					break;
+						break;
 					}
 				}       
 			}     
@@ -168,47 +171,49 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 					break;
 				}
 			}     
-			for (int j = 0; j < queue.size(); j++) {        
-				Node queueNode = queue.get(j);
-				if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.getReversedData(), queueNode.getReversedData()) /
-						Math.max(node.getReversedData().length(), queueNode.getReversedData().length())) >= matchThreshold) {
-					int nodesAboveThreshold = 0;  
-					
-					// Check that all members of the group satisfy the matching threshold to be merged
-					for (int k = 0; k < node.findSet().getChildren().size(); k++) {           
-						if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getChildren().get(k).getData(),
-								queueNode.getData()) / Math.max(node.findSet().getChildren().get(k).getData().length(), 
-								queueNode.getData().length())) >= matchThreshold) 
+			if (! changed) {
+				for (int j = 0; j < queue.size(); j++) {        
+					Node queueNode = queue.get(j);
+					if (1 - Math.abs(nd.score(node.getReversedData(), queueNode.getReversedData())) /
+							Math.max(node.getReversedData().length(), queueNode.getReversedData().length()) >= matchThreshold) {	
+						
+						// Check that all members of the group satisfy the matching threshold to be merged
+						int nodesAboveThreshold = 0;
+						for (int k = 0; k < node.findSet().getChildren().size(); k++) {           
+							if (1 - Math.abs(nd.score(node.findSet().getChildren().get(k).getData(),
+									queueNode.getData())) / Math.max(node.findSet().getChildren().get(k).getData().length(), 
+									queueNode.getData().length()) >= matchThreshold) 
+								nodesAboveThreshold++;
+							else
+								break;
+						}
+						if(nodesAboveThreshold != node.findSet().getChildren().size())
+							continue;
+						
+						if (1 - Math.abs(nd.score(node.findSet().getData(),
+								queueNode.getData())) / Math.max(node.findSet().getData().length(), 
+								queueNode.getData().length()) >= matchThreshold) 
 							nodesAboveThreshold++;
 						else
+							continue;
+						
+						for (int k = 0; k < queueNode.getChildren().size(); k++) {            
+							if (1 - Math.abs(nd.score(node.findSet().getData(), 
+									queueNode.getChildren().get(k).getData())) / Math.max(node.findSet().getData().length(), 
+									queueNode.getChildren().get(k).getData().length()) >= matchThreshold)  
+								nodesAboveThreshold++;
+							else 
+								break;
+						}
+						
+						if (nodesAboveThreshold == node.findSet().getChildren().size() + queueNode.getChildren().size() + 1) {       
+							queue.set(j, node.findSet().union(queueNode));
+							changed = true;
 							break;
-					}
-					if(nodesAboveThreshold != node.findSet().getChildren().size())
-						continue;
-					
-					if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getData(),
-							queueNode.getData()) / Math.max(node.findSet().getData().length(), 
-							queueNode.getData().length())) >= matchThreshold) 
-						nodesAboveThreshold++;
-					else
-						continue;
-					
-					for (int k = 0; k < queueNode.getChildren().size(); k++) {            
-						if (1 - ((double)Utils.getDamerauLevenshteinDistance(node.findSet().getData(), 
-								queueNode.getChildren().get(k).getData()) / Math.max(node.findSet().getData().length(), 
-								queueNode.getChildren().get(k).getData().length())) >= matchThreshold)  
-							nodesAboveThreshold++;
-						else 
-							break;
-					}
-					
-					if (nodesAboveThreshold == node.findSet().getChildren().size() + queueNode.getChildren().size() + 1) {             
-						queue.addFirst(node.findSet().union(queueNode));
-						queue.set(j, node.findSet().union(queueNode));
-						break;
-					}
-				}				
-			}     
+						}
+					}				
+				}     
+			}
 			if (!changed) { 
 				queue.addFirst(node.findSet());
 				if (queue.size() > 4) {
@@ -237,8 +242,8 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 					data.getGraph().get(i).getChildren().size() == 0)
 				continue;
 			if (i + 1 != data.getGraph().get(i).findSet().getIndex()) {
-				double similarity = (1 - ((double)Utils.getDamerauLevenshteinDistance(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData()) /
-						Math.max(data.getGraph().get(i).findSet().getData().length(), data.getGraph().get(i).getData().length())));
+				double similarity = (1 - Math.abs(nd.score(data.getGraph().get(i).findSet().getData(), data.getGraph().get(i).getData())) /
+						Math.max(data.getGraph().get(i).findSet().getData().length(), data.getGraph().get(i).getData().length()));
 				DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
 				symbols.setDecimalSeparator('.');
 				DecimalFormat df = new DecimalFormat("#.#", symbols);
