@@ -60,6 +60,7 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 	private ModifyListener lsMod;
 	private Listener lsCancel;
 	private Listener lsOK;
+	private SelectionAdapter lsRemove;
 	private SelectionAdapter lsDef;
 	private boolean changed;
 
@@ -290,6 +291,22 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 
 		wOK.addListener( SWT.Selection, lsOK );
 		wCancel.addListener( SWT.Selection, lsCancel );
+		
+		lsRemove = new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent e ) {
+				if (wRemoveDuplicates.getSelection())
+					wRemoveSingletons.setEnabled(false);
+				else if (wRemoveSingletons.getSelection()) 
+					wRemoveDuplicates.setEnabled(false);
+				if (!wRemoveDuplicates.getSelection() && !wRemoveSingletons.getEnabled())
+					wRemoveSingletons.setEnabled(true);
+				if (!wRemoveSingletons.getSelection() && !wRemoveDuplicates.getEnabled())
+					wRemoveDuplicates.setEnabled(true);
+			}
+		};
+		
+		wRemoveDuplicates.addSelectionListener(lsRemove);
+		wRemoveSingletons.addSelectionListener(lsRemove);
 
 		lsDef = new SelectionAdapter() {
 			public void widgetDefaultSelected( SelectionEvent e ) {
@@ -342,8 +359,14 @@ public class DIDuplicateDetectionDialog extends BaseStepDialog implements StepDi
 		wThreshold.setText(String.valueOf(meta.getMatchThreshold()));
 		wGroupColumnName.setText(meta.getGroupColumnName());
 		wSimColumnName.setText(meta.getSimColumnName());
-		wRemoveDuplicates.setSelection(meta.getRemoveDuplicates());
-		wRemoveSingletons.setSelection(meta.getRemoveSingletons());
+		if (meta.getRemoveDuplicates()) {
+			wRemoveDuplicates.setSelection(meta.getRemoveDuplicates());
+			wRemoveSingletons.setEnabled(false);
+		}
+		else if(meta.getRemoveSingletons()) {
+			wRemoveSingletons.setSelection(meta.getRemoveSingletons());
+			wRemoveDuplicates.setEnabled(false);
+		}
 		
 	}
 
