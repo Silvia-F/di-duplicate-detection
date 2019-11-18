@@ -238,6 +238,8 @@ public class DIDuplicateDetection extends BaseStep implements StepInterface {
 			Double outputSimilarity = null;
 			
 			//Verify if singletons should be in the output
+			if (meta.getRemoveDuplicates() && data.getGraph().get(i) != data.getGraph().get(i).findSet()) 
+				continue;
 			if (meta.getRemoveSingletons() && data.getGraph().get(i) == data.getGraph().get(i).findSet() &&
 					data.getGraph().get(i).getChildren().size() == 0)
 				continue;
