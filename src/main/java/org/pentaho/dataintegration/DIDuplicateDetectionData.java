@@ -30,14 +30,14 @@ import org.pentaho.di.trans.step.StepDataInterface;
 public class DIDuplicateDetectionData extends BaseStepData implements StepDataInterface {
 
 	private RowMetaInterface outputRowMeta;
-	protected Vector<Node> graph; // Keeps nodes that form the graph for the domain-independent approach
+	protected ArrayList<Node> graph; // Keeps nodes that form the graph for the domain-independent approach
 	protected List<Object[]> buffer; // Keeps row data for output
 	private int rowIndex; // Keeps the index of the last processed row
 	
 
 	public DIDuplicateDetectionData() {
 		super();
-		graph = new Vector<Node>();
+		graph = new ArrayList<Node>();
 		buffer = new ArrayList<Object[]>( 5000 );
 		rowIndex = 0;
 	}
@@ -54,7 +54,7 @@ public class DIDuplicateDetectionData extends BaseStepData implements StepDataIn
 		graph.add(new Node(data, index));
 	}
 	
-	public Vector<Node> getGraph() {
+	public ArrayList<Node> getGraph() {
 		return graph;
 	}
 	
